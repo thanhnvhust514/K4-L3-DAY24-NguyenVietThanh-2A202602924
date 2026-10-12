@@ -167,5 +167,6 @@ def handle(message: str, llm, log_dir: Path | None = None,
             except Exception:
                 pass
 
-    # Tổng hợp phản hồi cho người dùng
-    return llm.summarize(docs)
+    # Che PII trong nội dung trước khi đưa vào bản tóm tắt
+    sanitized_docs = [{"id": d["id"], "text": pii.redact(d["text"])} for d in docs]
+    return llm.summarize(sanitized_docs)
